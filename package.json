@@ -1,5 +1,5 @@
 {
-  "name": "react-native-toast-notifications",
+  "name": "@yunlu-apps/react-native-toast-notifications",
   "version": "3.4.0",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",

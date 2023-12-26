@@ -4,11 +4,11 @@ import {
   ViewStyle,
   KeyboardAvoidingView,
   Platform,
-  Dimensions, SafeAreaView,
+  Dimensions,
+  SafeAreaView,
+  ScaledSize,
 } from "react-native";
 import Toast, { ToastOptions, ToastProps } from "./toast";
-
-const { height, width } = Dimensions.get("window");
 
 export interface Props extends ToastOptions {
   renderToast?(toast: ToastProps): JSX.Element;
@@ -19,7 +19,7 @@ export interface Props extends ToastOptions {
   swipeEnabled?: boolean;
 }
 
-interface State {
+interface State extends ScaledSize{
   toasts: Array<ToastProps>;
 }
 
@@ -28,7 +28,22 @@ class ToastContainer extends Component<Props, State> {
     super(props);
     this.state = {
       toasts: [],
+      ...Dimensions.get("window")
     };
+  }
+
+  componentDidMount() {
+    Dimensions.addEventListener("change", this.onChange);
+  }
+
+  componentWillUnmount() {
+    Dimensions.removeEventListener("change", this.onChange);
+  }
+
+  onChange = ({ window }: { window: ScaledSize }) => {
+    this.setState({
+      ...window
+    })
   }
 
   static defaultProps: Props = {
@@ -110,7 +125,7 @@ class ToastContainer extends Component<Props, State> {
   }
 
   renderBottomToasts() {
-    const { toasts } = this.state;
+    const { toasts, width } = this.state;
     let { offset, offsetBottom } = this.props;
     let style: ViewStyle = {
       bottom: offsetBottom || offset,
@@ -136,7 +151,7 @@ class ToastContainer extends Component<Props, State> {
   }
 
   renderTopToasts() {
-    const { toasts } = this.state;
+    const { toasts, width } = this.state;
     let { offset, offsetTop } = this.props;
     let style: ViewStyle = {
       top: offsetTop || offset,
@@ -162,7 +177,7 @@ class ToastContainer extends Component<Props, State> {
   }
 
   renderCenterToasts() {
-    const { toasts } = this.state;
+    const { toasts, width, height } = this.state;
     let { offset, offsetTop } = this.props;
     let style: ViewStyle = {
       top: offsetTop || offset,
