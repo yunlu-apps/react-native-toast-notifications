@@ -37,7 +37,7 @@ class ToastContainer extends Component<Props, State> {
   }
 
   componentWillUnmount() {
-    Dimensions.removeEventListener("change", this.onChange);
+    Dimensions?.removeEventListener?.("change", this.onChange);
   }
 
   onChange = ({ window }: { window: ScaledSize }) => {
